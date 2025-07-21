@@ -12,18 +12,29 @@ class UsersService {
         this.userRepository = userRepository;
     }
 
-    async userCreate({ name, email, password, domain_id, agency_id, role }) {
+    async userCreate({ name, email, password, domain_id, agency_id, register_role, user_role }) {
 
-        if( !name || !email || !password || !domain_id || !role ) {
-            throw new AppError("Favor inserir todas as informações");
+        // Verifica se o usuário é manager, podendo criar apenas usuários common
+        if( user_role === "manager" ) {
+            register_role = "common"
         };
 
-        // TODO: Adicionar uma validação de: user_role <> "admin" e role === "admin" || role === "manager"
-
-        const checkUserExist = await this.userRepository.findByEmail(email);
-
-        if(checkUserExist) {
-            throw new AppError("Este e-mail já está em uso.");
+        // Verifica campos obrigatórios básicos
+        if (!name || !email || !password || !register_role) {
+            throw new AppError("Favor inserir todas as informações.");
+        };
+    
+        // Validação condicional com base no tipo de registro
+        if (register_role === "manager") {
+            if (!agency_id) {
+                throw new AppError("Favor inserir todas as informações.");
+            };
+        };
+    
+        if (register_role === "common") {
+            if (!agency_id || !domain_id) {
+                throw new AppError("Favor inserir todas as informações.");
+            };
         };
 
         const hashedPassword = await hash(password, 10);
@@ -43,7 +54,7 @@ class UsersService {
             password: hashedPassword, 
             domain_id, 
             agency_id,
-            role
+            register_role
         });
 
         return userCreated;

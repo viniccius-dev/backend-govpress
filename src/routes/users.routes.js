@@ -3,9 +3,13 @@ const { Router } = require("express");
 const usersRoutes = Router();
 
 const UsersController = require("../controllers/UsersController");
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
+const verifyUserManagerAuthorization = require("../middlewares/verifyUserManagerAuthorization");
 
 const usersController = new UsersController();
 
-usersRoutes.post("/", usersController.create);
+usersRoutes.use(ensureAuthenticated);
+
+usersRoutes.post("/", verifyUserManagerAuthorization() , usersController.create);
 
 module.exports = usersRoutes;
