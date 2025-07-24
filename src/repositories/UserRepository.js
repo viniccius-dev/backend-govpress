@@ -5,7 +5,7 @@ class UserRepository {
         const user = await knex("User").where({ id }).first();
 
         return user;
-    }
+    };
 
     async findByEmail(email) {
         const user = await knex("User").where({ email }).first();
@@ -24,6 +24,12 @@ class UserRepository {
         });
 
         return { id: userId };
+    };
+
+    async update(user) {
+        const userUpdated = await knex("User").update(user).where({ id: user.id });
+
+        return userUpdated;
     };
 }
 

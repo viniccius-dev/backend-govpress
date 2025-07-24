@@ -22,6 +22,28 @@ class UsersController {
         return response.status(201).json({ message: "Perfil criado com sucesso." });
     };
 
+    async update(request, response) {
+        const { name, email, password, modify_domain_id, modify_user_id } = request.body;
+        const user_id = request.user.id;
+        const user_role = request.user.role;
+        const { domain_id } = request.user;
+
+        const userRepository = new UserRepository();
+        const usersService = new UsersService(userRepository);
+        const user = await usersService.userUpdate({
+            modify_user_id,
+            name, 
+            email, 
+            password,
+            modify_domain_id, 
+            user_id, 
+            user_role,
+            domain_id
+        });
+
+        return response.json({ user, message: "Perfil atualizado com sucesso." });
+    }
+
 };
 
 module.exports = UsersController;
