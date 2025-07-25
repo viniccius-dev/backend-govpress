@@ -68,10 +68,16 @@ class UsersService {
         modify_domain_id, 
         user_id, 
         user_role,
-        domain_id
+        agency_id
     }) {
-        // TODO: Caso o `user_role` seja "manager", filtrar usuário por id e domain_id do user do solicitante da alteração
-        const user = await this.userRepository.findById(modify_user_id);
+        
+        let user;
+
+        if (user_role === "manager") {
+            user = await this.userRepository.findByIdAndAgencyId(modify_user_id, agency_id);
+        } else {
+            user = await this.userRepository.findById(modify_user_id);
+        }
 
         if(!user) {
             throw new AppError("Usuário não encontrado", 404);
@@ -82,7 +88,7 @@ class UsersService {
         if(user_role === "common" && !isSameUser) {
             throw new AppError("Não Autorizado.", 403);
         };
-
+        
         if(user_role === "manager" && user.role !== "common" && !isSameUser) {
             throw new AppError("Não autorizado.", 403);
         };
@@ -91,8 +97,8 @@ class UsersService {
             throw new AppError("Não autorizado.", 403);
         } 
 
-        if(name !== "") {
-            user.name = name ?? user.name;
+        if(name?.trim()) {
+            user.name = name;
         }
 
         if(email) {
@@ -105,7 +111,7 @@ class UsersService {
             user.email = email ?? user.email;
         }
 
-        if(domain_id && user_role === "manager") {
+        if(modify_domain_id && user_role !== "common" && !isSameUser && user.role === "common") {
             // TODO: Validação de domínio existente
 
             // const domainRepository = new DomainRepository();
@@ -116,7 +122,7 @@ class UsersService {
             //     throw new AppError("Domínio não encontrado.", 404);
             // };
 
-            user.domain_id = domain_id ?? user.domain_id;
+            user.domain_id = modify_domain_id ?? user.domain_id;
         }
 
         user.password = password ? await hash(password, 10) : user.password;

@@ -26,7 +26,7 @@ class UsersController {
         const { name, email, password, modify_domain_id, modify_user_id } = request.body;
         const user_id = request.user.id;
         const user_role = request.user.role;
-        const { domain_id } = request.user;
+        const { agency_id } = request.user;
 
         const userRepository = new UserRepository();
         const usersService = new UsersService(userRepository);
@@ -38,7 +38,7 @@ class UsersController {
             modify_domain_id, 
             user_id, 
             user_role,
-            domain_id
+            agency_id
         });
 
         return response.json({ user, message: "Perfil atualizado com sucesso." });

@@ -7,6 +7,11 @@ class UserRepository {
         return user;
     };
 
+    async findByIdAndAgencyId(id, agency_id) {
+        const user = await knex("User").where({ id, agency_id }).first();
+        return user;
+    }
+
     async findByEmail(email) {
         const user = await knex("User").where({ email }).first();
 
