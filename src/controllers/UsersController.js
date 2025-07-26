@@ -42,7 +42,16 @@ class UsersController {
         });
 
         return response.json({ user, message: "Perfil atualizado com sucesso." });
-    }
+    };
+
+    async index(request, response) {
+        const { agency_id } = request.user;
+        
+        const userRepository = new UserRepository();
+        const users = await userRepository.getUsers(agency_id);
+
+        return response.json(users);
+    };
 
 };
 

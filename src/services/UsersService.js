@@ -134,7 +134,7 @@ class UsersService {
         const userUpdated = await this.userRepository.update(user);
 
         return userUpdated;
-    }
+    };
 };
 
 module.exports = UsersService;

@@ -36,6 +36,26 @@ class UserRepository {
 
         return userUpdated;
     };
+
+    async getUsers(agency_id) {
+        const query = knex("User")
+            .select([
+                "id",
+                "name",
+                "email",
+                "domain_id",
+                "agency_id",
+                "role"
+            ])
+            .orderBy("email");
+    
+        if (agency_id) {
+            query.where({ agency_id });
+        }
+    
+        const users = await query;
+        return users;
+    };
 }
 
 module.exports = UserRepository;
