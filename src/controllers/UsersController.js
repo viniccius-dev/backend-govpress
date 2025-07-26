@@ -53,6 +53,17 @@ class UsersController {
         return response.json(users);
     };
 
+    async show(request, response) {
+        const { id } = request.params;
+        const { agency_id } = request.user;
+
+        const userRepository = new UserRepository();
+        const usersService = new UsersService(userRepository);
+        const user = await usersService.showUser({ id, agency_id });
+
+        return response.json(user);
+    };
+
 };
 
 module.exports = UsersController;

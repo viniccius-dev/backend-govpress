@@ -13,5 +13,6 @@ usersRoutes.use(ensureAuthenticated);
 usersRoutes.post("/", verifyUserManagerAuthorization() , usersController.create);
 usersRoutes.put("/", usersController.update);
 usersRoutes.get("/", verifyUserManagerAuthorization(), usersController.index);
+usersRoutes.get("/:id", verifyUserManagerAuthorization(), usersController.show);
 
 module.exports = usersRoutes;

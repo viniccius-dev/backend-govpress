@@ -135,6 +135,25 @@ class UsersService {
 
         return userUpdated;
     };
+
+    async showUser({ id, agency_id }) {
+        
+        let user;
+
+        if (agency_id) {
+            user = await this.userRepository.findByIdAndAgencyId(id, agency_id);
+        } else {
+            user = await this.userRepository.findById(id);
+        };
+
+        if(!user) {
+            throw new AppError("Usuário não encontrado.", 404);
+        };
+
+        delete user.password;
+
+        return user;
+    };
 };
 
 module.exports = UsersService;
