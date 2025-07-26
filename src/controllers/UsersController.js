@@ -6,6 +6,7 @@ class UsersController {
     async create(request, response) {
         const { name, email, password, domain_id, agency_id, register_role } = request.body;
         const user_role = request.user.role;
+        const creator_agency_id = request.user.agency_id; 
 
         const userRepository = new UserRepository();
         const usersService = new UsersService(userRepository);
@@ -16,7 +17,8 @@ class UsersController {
             domain_id,
             agency_id,
             register_role,
-            user_role
+            user_role,
+            creator_agency_id
         });
 
         return response.status(201).json({ message: "Perfil criado com sucesso." });
@@ -62,6 +64,18 @@ class UsersController {
         const user = await usersService.showUser({ id, agency_id });
 
         return response.json(user);
+    };
+
+    async delete(request, response) {
+        const { id } = request.params;
+        const user_role = request.user.role;
+        const { agency_id } = request.user;
+
+        const userRepository = new UserRepository();
+        const usersService = new UsersService(userRepository);
+        await usersService.userDelete({ id, user_role, agency_id });
+
+        return response.json({ message: "Perfil deletado com sucesso."} );
     };
 
 };

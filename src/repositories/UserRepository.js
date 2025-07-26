@@ -56,6 +56,10 @@ class UserRepository {
         const users = await query;
         return users;
     };
+
+    async delete(id) {
+        return await knex("User").where({ id }).delete();
+    };
 }
 
 module.exports = UserRepository;

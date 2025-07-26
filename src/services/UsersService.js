@@ -12,11 +12,27 @@ class UsersService {
         this.userRepository = userRepository;
     }
 
-    async userCreate({ name, email, password, domain_id, agency_id, register_role, user_role }) {
+    async userCreate({ name, email, password, domain_id, agency_id, register_role, user_role, creator_agency_id }) {
 
-        // Verifica se o usuário é manager, podendo criar apenas usuários common
-        if( user_role === "manager" ) {
-            register_role = "common"
+        // Verifica se o usuário é manager, podendo criar apenas usuários common e garante que o registro da agência seja o mesmo criador
+        if(user_role === "manager") {
+            register_role = "common";
+            agency_id = creator_agency_id;
+
+            // TODO: Verificar se domain_id informado pertence à agency_id (quando houver repositório de agencies)
+        };
+
+        // Caso o cadastrante seja admin garante:
+            // Que se o usuário cadastrado for manager ou outro admin o domain_id seja null
+            // Que o agency_id seja null se o usuário cadastro for admin
+        if(user_role === "admin") {
+            if(register_role !== "common") {
+                domain_id = null;
+            };
+
+            if(register_role === "admin") {
+                agency_id = null;
+            };
         };
 
         // Verifica campos obrigatórios básicos
@@ -154,6 +170,29 @@ class UsersService {
 
         return user;
     };
+
+    async userDelete({ id, user_role, agency_id }) {
+        let user;
+
+        if (agency_id) {
+            user = await this.userRepository.findByIdAndAgencyId(id, agency_id);
+        } else {
+            user = await this.userRepository.findById(id);
+        };
+
+        if(!user) {
+            throw new AppError("Usuário não encontrado.", 404);
+        };
+
+        if (
+            (user_role === "admin" && user?.role === "admin") ||
+            (user_role === "manager" && user?.role === "manager")
+          ) {
+            throw new AppError("Não autorizado.", 403);
+          }
+
+        return await this.userRepository.delete(id);
+    }
 };
 
 module.exports = UsersService;
