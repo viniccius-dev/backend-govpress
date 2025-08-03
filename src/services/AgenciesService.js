@@ -62,6 +62,16 @@ class AgenciesService {
         const  agencyUpdate = await this.agencyRepository.update(agency);
         
         return agencyUpdate;
+    };
+
+    async showAgency(agency_id) {
+        const agency = await this.agencyRepository.findById(agency_id);
+
+        if(!agency) {
+            throw new AppError("Agência não encontrada.", 404);
+        };
+
+        return agency;
     }
 };
 

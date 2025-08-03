@@ -58,6 +58,16 @@ class AgenciesController {
         const agency = await agencyRepository.getAgencies();
         
         return response.json(agency);
+    };
+
+    async show(request, response) {
+        const { agency_id } = request.params;
+
+        const agencyRepository = new AgencyRepository()
+        const agenciesService = new AgenciesService(agencyRepository);
+        const agency = await agenciesService.showAgency(agency_id);
+
+        return response.json(agency);
     }
 
 };
