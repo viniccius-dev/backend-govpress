@@ -30,6 +30,12 @@ class AgencyRepository {
         const agencyUpdate = await knex("Agency").update(agency).where({ id: agency.id });
 
         return agencyUpdate;
+    };
+
+    async getAgencies() {
+        const agencies = await knex("Agency").orderBy("name");
+
+        return agencies;
     }
 };
 

@@ -53,6 +53,13 @@ class AgenciesController {
         return response.json({ message: "Informações da agência atualizadas com sucesso." });
     };
 
+    async index(request, response) {
+        const agencyRepository = new AgencyRepository();
+        const agency = await agencyRepository.getAgencies();
+        
+        return response.json(agency);
+    }
+
 };
 
 module.exports = AgenciesController;
