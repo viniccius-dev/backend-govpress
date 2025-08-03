@@ -39,6 +39,14 @@ class UsersService {
         if (!name || !email || !password || !register_role) {
             throw new AppError("Favor inserir todas as informações.");
         };
+
+
+        // Verifica se e-mail já está em uso
+        const checkUserExist = await this.userRepository.findByEmail(email);
+
+        if(checkUserExist) {
+            throw new AppError("Este e-mail já está em uso.", 409);
+        };
     
         // Validação condicional com base no tipo de registro
         if (register_role === "manager") {
