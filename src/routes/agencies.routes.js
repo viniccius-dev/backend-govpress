@@ -13,6 +13,7 @@ agenciesRoutes.use(verifyUserAdminAuthorization());
 
 agenciesRoutes.post("/", agenciesController.create);
 agenciesRoutes.put("/:agency_id", agenciesController.update);
+agenciesRoutes.delete("/:agency_id", agenciesController.delete);
 agenciesRoutes.get("/", agenciesController.index);
 agenciesRoutes.get("/:agency_id", agenciesController.show);
 

@@ -72,6 +72,18 @@ class AgenciesService {
         };
 
         return agency;
+    };
+
+    async agencyDelete(agency_id) {
+        const agency = await this.agencyRepository.findById(agency_id);
+
+        if(!agency) {
+            throw new AppError("Agência não encontrada.", 404);
+        };
+
+        //TODO: Desenvolver uma exclusão "dominó", deletando domínios, licitações/publicações e anexos vinculados a agência excluida
+
+        return await this.agencyRepository.delete(agency_id);
     }
 };
 

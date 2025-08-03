@@ -36,6 +36,10 @@ class AgencyRepository {
         const agencies = await knex("Agency").orderBy("name");
 
         return agencies;
+    };
+
+    async delete(id) {
+        return await knex("Agency").where({ id }).delete();
     }
 };
 

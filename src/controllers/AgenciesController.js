@@ -68,6 +68,16 @@ class AgenciesController {
         const agency = await agenciesService.showAgency(agency_id);
 
         return response.json(agency);
+    };
+
+    async delete(request, response) {
+        const { agency_id } = request.params;
+
+        const agencyRepository = new AgencyRepository();
+        const agenciesService = new AgenciesService(agencyRepository);
+        await agenciesService.agencyDelete(agency_id);
+
+        return response.json({ message: "Agência excluida com sucesso." }); 
     }
 
 };
