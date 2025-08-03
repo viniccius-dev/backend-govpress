@@ -25,6 +25,12 @@ class AgencyRepository {
 
         return { id: agencyId };
     };
+
+    async update(agency) {
+        const agencyUpdate = await knex("Agency").update(agency).where({ id: agency.id });
+
+        return agencyUpdate;
+    }
 };
 
 module.exports = AgencyRepository;

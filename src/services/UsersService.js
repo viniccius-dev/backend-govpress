@@ -129,7 +129,7 @@ class UsersService {
             const userWithUpdateEmail = await this.userRepository.findByEmail(email);
 
             if(userWithUpdateEmail && userWithUpdateEmail.id !== user.id) {
-                throw new AppError("Esse e-mail já está em uso. Por favor escolha outro.");
+                throw new AppError("Esse e-mail já está em uso. Por favor escolha outro.", 409);
             };
 
             user.email = email ?? user.email;

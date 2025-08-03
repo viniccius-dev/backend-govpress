@@ -27,6 +27,32 @@ class AgenciesController {
         return response.status(201).json({ message: "Agência cadastrada com sucesso." });
     };
 
+    async update(request, response) {
+        const {
+            name,
+            storage_limit,
+            domain_limit,
+            access_bids,
+            access_publications,
+            enabled_status
+        } = request.body;
+        const { agency_id } = request.params;
+
+        const agencyRepository = new AgencyRepository();
+        const agenciesService = new AgenciesService(agencyRepository);
+        await agenciesService.agencyUpdate({
+            name,
+            storage_limit,
+            domain_limit,
+            access_bids,
+            access_publications,
+            enabled_status,
+            agency_id
+        });
+
+        return response.json({ message: "Informações da agência atualizadas com sucesso." });
+    };
+
 };
 
 module.exports = AgenciesController;

@@ -30,6 +30,39 @@ class AgenciesService {
 
         return agencyCreate;
     };
+
+    async agencyUpdate({
+        name,
+        storage_limit,
+        domain_limit,
+        access_bids,
+        access_publications,
+        enabled_status,
+        agency_id
+    }) {
+        const agency = await this.agencyRepository.findById(agency_id);
+
+        if(!agency) {
+            throw new AppError("Agência não encontrada.", 404);
+        };
+
+        const checkAgency = await this.agencyRepository.findByName(name ?? "");
+
+        if(checkAgency && checkAgency.id !== agency.id) {
+            throw new AppError("Esse nome já está em uso. Por favor escolha outro.", 409);
+        };
+
+        agency.name = name ?? agency.name;
+        agency.storage_limit = storage_limit ?? agency.storage_limit;
+        agency.domain_limit = domain_limit ?? agency.domain_limit;
+        agency.access_bids = access_bids ?? agency.access_bids;
+        agency.access_publications = access_publications ?? agency.access_publications;
+        agency.enabled_status = enabled_status ?? agency.enabled_status;
+
+        const  agencyUpdate = await this.agencyRepository.update(agency);
+        
+        return agencyUpdate;
+    }
 };
 
 module.exports = AgenciesService;

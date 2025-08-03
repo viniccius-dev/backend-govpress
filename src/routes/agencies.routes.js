@@ -12,5 +12,6 @@ agenciesRoutes.use(ensureAuthenticated);
 agenciesRoutes.use(verifyUserAdminAuthorization());
 
 agenciesRoutes.post("/", agenciesController.create);
+agenciesRoutes.put("/:agency_id", agenciesController.update);
 
 module.exports = agenciesRoutes;
